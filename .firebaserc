@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "escape-room-a8e85": {
+      "hosting": {
+        "escape-room": [
+          "escape-room-a8e85"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "escape-room-a8e85"
+  }
+}
