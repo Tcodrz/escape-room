@@ -1,4 +1,3 @@
-<!-- <p>page works!</p> -->
 <div *ngIf="isLoading">Loading...</div>
 
 <p-card *ngIf="gameStart">
@@ -20,8 +19,9 @@
         <button pButton class="p-button-raised p-button-primary" (click)="onStart()">התחלה</button>
     </div>
 </p-card>
-
-<ng-container *ngFor="let q of page.questions; let i = index">
-    <app-question *ngIf="i === currentQuestion" [question]="q" [questionNumber]="i" (clueRecieved)="onAddTime(60)"
-                  (answerFail)="onAddTime(120)" (answerSuccess)="onAnswerSuccess()"></app-question>
+<ng-container *ngIf="!!page && page.questions?.length > 0">
+    <ng-container *ngFor="let q of page.questions; let i = index">
+        <app-question *ngIf="i === currentQuestion" [question]="q" [questionNumber]="i" (clueRecieved)="onAddTime(60)"
+                      (answerFail)="onAddTime(120)" (answerSuccess)="onAnswerSuccess()"></app-question>
+    </ng-container>
 </ng-container>

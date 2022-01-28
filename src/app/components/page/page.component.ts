@@ -22,7 +22,6 @@ export class PageComponent implements OnInit {
     private activatedRoutes: ActivatedRoute,
     private pageService: PageService,
   ) { }
-
   ngOnInit(): void {
     this.activatedRoutes.params.subscribe(params => {
       if (params.id) {
@@ -48,17 +47,14 @@ export class PageComponent implements OnInit {
     if (this.currentQuestion >= this.page.questions.length) this.onGameOver();
   }
   onGameOver(): void {
-    // this.timer.subscribe(time => {
     this.timerSub.unsubscribe();
     this.page.finalTime = this.timer;
     this.gameStart = false;
     this.pageService.gotoResultsPage(this.timer);
-    // });
   }
   onAnswerSuccess(): void {
     this.currentQuestion++;
     if (this.page.questions.length === this.currentQuestion) {
-      // Show Congrats Page
       this.onGameOver();
     }
   }
