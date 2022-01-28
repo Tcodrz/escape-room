@@ -1,0 +1,20 @@
+.login-page {
+  text-align: center;
+  h1 {
+    margin-bottom: 10px;
+  }
+  h3 {
+    margin-top: 0;
+  }
+  .team-name {
+    display: block;
+    width: 60%;
+    margin: 30px auto;
+  }
+  button.p-button-raised {
+    // margin-top: 28px;
+    display: block;
+    width: 60%;
+    margin: 20px auto;
+  }
+}

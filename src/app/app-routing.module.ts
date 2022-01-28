@@ -7,11 +7,12 @@ import { LoginComponent } from './components/login/login.component';
 
 const routes: Routes = [
   { path: 'login', redirectTo: 'bad-request' },
-  { path: 'login/:id', component: LoginComponent },
+  { path: 'login/:pageID', component: LoginComponent },
   { path: 'page', redirectTo: 'bad-request' },
   { path: 'page/:id', component: PageComponent },
   { path: 'bad-request', component: BadRequestComponent },
   { path: 'results/:time', component: ResultsComponent },
+  { path: '**', redirectTo: 'bad-request' }
 ];
 
 @NgModule({
