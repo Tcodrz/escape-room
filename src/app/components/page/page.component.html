@@ -1,0 +1,10 @@
+<!-- <p>page works!</p> -->
+<div *ngIf="isLoading">Loading...</div>
+<div> {{timer$ | async}} </div>
+<div>ברוכים הבאים למשחק בלה בלה</div>
+<button *ngIf="!gameStart" (click)="onStart()">התחלה</button>
+<button *ngIf="gameStart" (click)="onAddTime(60)">הוסף דקה</button>
+<button *ngIf="gameStart" (click)="onAddTime(120)">הוסף שתי דקות</button>
+
+
+<pre> {{ page | json }} </pre>

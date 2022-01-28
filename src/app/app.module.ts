@@ -8,9 +8,13 @@ import { AngularFireFunctionsModule, USE_EMULATOR as USE_FUNCTIONS_EMULATOR } fr
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
+import { PageComponent } from './components/page/page.component';
+import { BadRequestComponent } from './components/bad-request/bad-request.component';
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    PageComponent,
+    BadRequestComponent
   ],
   imports: [
     BrowserModule,
