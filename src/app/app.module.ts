@@ -13,13 +13,15 @@ import { BadRequestComponent } from './components/bad-request/bad-request.compon
 import { PrimengModule } from './primeng/primeng.module';
 import { QuestionComponent } from './components/question/question.component';
 import { ResultsComponent } from './components/results/results.component';
+import { LoginComponent } from './components/login/login.component';
 @NgModule({
   declarations: [
     AppComponent,
     PageComponent,
     BadRequestComponent,
     QuestionComponent,
-    ResultsComponent
+    ResultsComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
