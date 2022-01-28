@@ -54,4 +54,7 @@ export class PageService {
   gotoErrorPage(): void {
     this.router.navigate(['bad-request']);
   }
+  gotoResultsPage(time: string): void {
+    this.router.navigate([`results/${time}`]);
+  }
 }

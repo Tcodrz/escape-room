@@ -1,10 +1,27 @@
 <!-- <p>page works!</p> -->
 <div *ngIf="isLoading">Loading...</div>
-<div> {{timer$ | async}} </div>
-<div>ברוכים הבאים למשחק בלה בלה</div>
-<button *ngIf="!gameStart" (click)="onStart()">התחלה</button>
-<button *ngIf="gameStart" (click)="onAddTime(60)">הוסף דקה</button>
-<button *ngIf="gameStart" (click)="onAddTime(120)">הוסף שתי דקות</button>
 
+<p-card *ngIf="gameStart">
+    <div class="timer"> {{ timer }} </div>
+</p-card>
 
-<pre> {{ page | json }} </pre>
+<p-card *ngIf="!gameStart">
+    <div class="game-intro">
+        <h2>ברוכים הבאים</h2>
+        <h4>להלן חוקי המשחק:</h4>
+        <ul>
+            <li>עליכם לענות על כל השאלות בזמן הקצר ביותר</li>
+            <li>מרגע שתתחילו לשחק השעון יתחיל לרוץ ויספור את הזמן שלכם</li>
+            <li>תוחלו לבקש רמזים לתשובות, כל בקשה לרמז תעלה את השעון בדקה</li>
+            <li>אם תכיסו תשובה לא נכונה יתווספו שתי דקות לשעון שלכם</li>
+            <li>לחצו על התחלה כדי להתחיל לשחק</li>
+            <li>בהצלחה!</li>
+        </ul>
+        <button pButton class="p-button-raised p-button-primary" (click)="onStart()">התחלה</button>
+    </div>
+</p-card>
+
+<ng-container *ngFor="let q of page.questions; let i = index">
+    <app-question *ngIf="i === currentQuestion" [question]="q" [questionNumber]="i" (clueRecieved)="onAddTime(60)"
+                  (answerFail)="onAddTime(120)" (answerSuccess)="onAnswerSuccess()"></app-question>
+</ng-container>

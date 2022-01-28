@@ -10,11 +10,16 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { PageComponent } from './components/page/page.component';
 import { BadRequestComponent } from './components/bad-request/bad-request.component';
+import { PrimengModule } from './primeng/primeng.module';
+import { QuestionComponent } from './components/question/question.component';
+import { ResultsComponent } from './components/results/results.component';
 @NgModule({
   declarations: [
     AppComponent,
     PageComponent,
-    BadRequestComponent
+    BadRequestComponent,
+    QuestionComponent,
+    ResultsComponent
   ],
   imports: [
     BrowserModule,
@@ -24,6 +29,7 @@ import { BadRequestComponent } from './components/bad-request/bad-request.compon
     AngularFirestoreModule,
     AngularFireAuthModule,
     AngularFireFunctionsModule,
+    PrimengModule,
   ],
   providers: [
     { provide: USE_FIRESTORE_EMULATOR, useValue: environment.useEmulators ? ['localhost', 8080] : undefined },

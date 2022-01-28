@@ -1,0 +1,14 @@
+<p-card>
+    <div class="question">
+        <h1>{{ questionNumber + 1}}</h1>
+        <h3>{{ question.q }}</h3>
+        <input type="text" #answer pInputText class="answer" autofocus>
+        <p class="clue-container" *ngFor="let clue of clues"> {{ clue }} </p>
+        <div class="button-container">
+            <button pButton class="p-button-text p-button-rounded p-button-success" icon="pi pi-check"
+                    (click)="onSubmit(answer.value)"></button>
+            <button pButton class="p-button-text p-button-rounded p-button-help"
+                    icon="pi pi-question-circle" (click)="onClueRequest()"></button>
+        </div>
+    </div>
+</p-card>

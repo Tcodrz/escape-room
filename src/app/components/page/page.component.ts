@@ -1,6 +1,6 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription } from 'rxjs';
 import { Page } from 'src/app/interface/page.interface';
 import { PageService } from './../../services/page.service';
 
@@ -13,10 +13,11 @@ import { PageService } from './../../services/page.service';
 })
 export class PageComponent implements OnInit {
   page: Page;
-  timer$: Observable<string> = of('00:00');
+  timer: string = '00:00';
   isLoading = true;
   gameStart = false;
   currentQuestion: number = undefined;
+  timerSub: Subscription;
   constructor(
     private activatedRoutes: ActivatedRoute,
     private pageService: PageService,
@@ -35,7 +36,9 @@ export class PageComponent implements OnInit {
     });
   }
   onStart(): void {
-    this.timer$ = this.pageService.getTimer();
+    this.timerSub = this.pageService.getTimer().subscribe((time) => {
+      this.timer = time;
+    });
     this.currentQuestion = 0;
     this.gameStart = true;
   }
@@ -45,8 +48,18 @@ export class PageComponent implements OnInit {
     if (this.currentQuestion >= this.page.questions.length) this.onGameOver();
   }
   onGameOver(): void {
-    this.timer$.subscribe(time => {
-      this.page.finalTime = time;
-    });
+    // this.timer.subscribe(time => {
+    this.timerSub.unsubscribe();
+    this.page.finalTime = this.timer;
+    this.gameStart = false;
+    this.pageService.gotoResultsPage(this.timer);
+    // });
+  }
+  onAnswerSuccess(): void {
+    this.currentQuestion++;
+    if (this.page.questions.length === this.currentQuestion) {
+      // Show Congrats Page
+      this.onGameOver();
+    }
   }
 }
