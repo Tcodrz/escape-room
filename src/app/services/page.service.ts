@@ -17,7 +17,7 @@ interface PageDocument {
   providedIn: 'root'
 })
 export class PageService {
-  addedTime: number = 0;
+  private addedTime: number = 0;
 
   constructor(
     private db: AngularFirestore,
@@ -29,7 +29,7 @@ export class PageService {
       this.db.collection<Question>(`questions`).get()
     ]).pipe(
       map(([pageDoc, questionsCollection]) => {
-        const page: Page = { id: pageDoc.id, questions: [], number: pageDoc.data().number, finalTime: '' };
+        const page: Page = { id: pageDoc.id, questions: [], number: pageDoc.data().number };
         questionsCollection.forEach(questionDoc => {
           const question: Question = { id: questionDoc.id, ...questionDoc.data() };
           if (question.pageID === page.id) page.questions.push(question);
@@ -47,6 +47,9 @@ export class PageService {
       const timeString = `${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`;
       return timeString;
     }));
+  }
+  setAddedTime(time: number): void {
+    this.addedTime = time;
   }
   addTime(seconds: number): void {
     this.addedTime += seconds;

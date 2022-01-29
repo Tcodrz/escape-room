@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Team } from 'src/app/interface/team.interface';
+import { CacheService, LocalStorageKeys } from 'src/app/services/cache.service';
 import { TeamService } from 'src/app/services/team.service';
 
 @Component({
@@ -13,14 +13,13 @@ export class ResultsComponent implements OnInit {
   constructor(
     private activatedRoute: ActivatedRoute,
     private teamService: TeamService,
+    private cacheService: CacheService,
   ) { }
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.time = params.time;
-      this.teamService.updateTeam({
-        finished: true,
-        finalTime: this.time,
-      });
+      localStorage.removeItem(LocalStorageKeys.Page);
+      localStorage.removeItem(LocalStorageKeys.Timer);
     });
   }
 }

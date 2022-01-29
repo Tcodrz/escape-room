@@ -4,4 +4,8 @@ export interface Team {
     pageID: string;
     finished: boolean;
     finalTime?: string;
+    finishedAt?: Date;
+    started: boolean;
+    currentQuestion?: number;
+    totalQuestions?: number;
 }

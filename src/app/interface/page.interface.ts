@@ -4,5 +4,6 @@ export interface Page {
   id: string;
   questions: Question[];
   number?: number;
-  finalTime: string;
+  timerState?: string;
+  currentQuestionIndex?: number;
 }
