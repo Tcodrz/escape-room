@@ -11,8 +11,9 @@
         <ul>
             <li>עליכם לענות על כל השאלות בזמן הקצר ביותר</li>
             <li>מרגע שתתחילו לשחק השעון יתחיל לרוץ ויספור את הזמן שלכם</li>
-            <li>תוחלו לבקש רמזים לתשובות, כל בקשה לרמז תעלה את השעון בדקה</li>
-            <li>אם תכיסו תשובה לא נכונה יתווספו שתי דקות לשעון שלכם</li>
+            <li>תוכלו לבקש רמזים ע"י לחיצה על <i class="pi pi-question-circle"></i></li>
+            <li>כל בקשה לרמז תעלה את השעון בדקה</li>
+            <li>אם תכניסו תשובה לא נכונה יתווספו שתי דקות לשעון שלכם</li>
             <li>לחצו על התחלה כדי להתחיל לשחק</li>
             <li>בהצלחה!</li>
         </ul>
@@ -22,6 +23,7 @@
 <ng-container *ngIf="!!page && page.questions?.length > 0">
     <ng-container *ngFor="let q of page.questions; let i = index">
         <app-question *ngIf="i === team.currentQuestion" [question]="q" [questionNumber]="i"
+                      [totalQuestions]="page.questions.length"
                       (clueRecieved)="onAddTime(60)"
                       (answerFail)="onAddTime(120)" (answerSuccess)="onAnswerSuccess()"></app-question>
     </ng-container>

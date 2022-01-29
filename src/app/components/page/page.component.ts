@@ -59,13 +59,19 @@ export class PageComponent implements OnInit, OnDestroy {
   continueGame(): void {
     this.page = this.cacheService.getItem<Page>(LocalStorageKeys.Page);
     let timer = this.cacheService.getItem<string>(LocalStorageKeys.Timer)
-    if (this.team.time || timer) {
+    let cacheTime;
+    let time;
+    if (!!timer) {
       const cacheMinutes = +timer.split(':')[0];
       const cacheSeconds = +timer.split(':')[1];
-      const cacheTime = (cacheMinutes * 60) + cacheSeconds;
+      cacheTime = (cacheMinutes * 60) + cacheSeconds;
+    }
+    if (!!this.team.time) {
       const minutes = +this.team.time.split(':')[0];
       const seconds = +this.team.time.split(':')[1];
-      const time = (minutes * 60) + seconds;
+      time = (minutes * 60) + seconds;
+    }
+    if (!!time || !!cacheTime) {
       this.pageService.setAddedTime(time >= cacheTime ? time : cacheTime);
     }
     if (this.team.started) {
