@@ -1,6 +1,10 @@
 <p-card>
     <div class="question">
-        <h1>{{ questionNumber + 1}}</h1>
+        <div class="question-header">
+            <h1>{{ questionNumber + 1}}/{{ totalQuestions }}</h1>
+            <p-message [ngClass]="message ? 'visible' : 'hidden'" [severity]="messageColor" [text]="message">
+            </p-message>
+        </div>
         <h3>{{ question.q }}</h3>
         <input type="text" #answer pInputText class="answer" autofocus>
         <p class="clue-container" *ngFor="let clue of clues"> {{ clue }} </p>
