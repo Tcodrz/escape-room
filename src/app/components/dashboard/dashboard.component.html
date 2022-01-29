@@ -1,0 +1,9 @@
+<p-card>
+    <div class="dashboard-page">
+        <ul>
+            <li *ngFor="let team of teams$ | async">
+                {{ team.name }} - {{ team.finalTime }}
+            </li>
+        </ul>
+    </div>
+</p-card>

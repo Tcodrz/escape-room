@@ -4,8 +4,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ResultsComponent } from './components/results/results.component';
 import { LoginComponent } from './components/login/login.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 const routes: Routes = [
+  { path: 'dashboard', component: DashboardComponent },
   { path: 'login', redirectTo: 'bad-request' },
   { path: 'login/:pageID', component: LoginComponent },
   { path: 'page', redirectTo: 'bad-request' },

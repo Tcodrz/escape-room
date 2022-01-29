@@ -14,6 +14,7 @@ import { PrimengModule } from './primeng/primeng.module';
 import { QuestionComponent } from './components/question/question.component';
 import { ResultsComponent } from './components/results/results.component';
 import { LoginComponent } from './components/login/login.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,7 +22,8 @@ import { LoginComponent } from './components/login/login.component';
     BadRequestComponent,
     QuestionComponent,
     ResultsComponent,
-    LoginComponent
+    LoginComponent,
+    DashboardComponent
   ],
   imports: [
     BrowserModule,
