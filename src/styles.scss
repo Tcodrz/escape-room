@@ -8,12 +8,12 @@ body {
   align-items: center;
 
   app-root {
-    margin-top: 5rem;
     width: 100%;
     @media only screen and (min-width: 500px) {
       width: 75%;
     }
     @media only screen and (min-width: 768px) {
+      margin-top: 5rem;
       width: 50%;
     }
     @media only screen and (min-width: 1000px) {
@@ -29,4 +29,11 @@ body {
       width: 25%;
     }
   }
+}
+
+.p-card {
+  margin-top: 1.2rem;
+}
+.p-card .p-card-body {
+  padding: 0.5rem;
 }
