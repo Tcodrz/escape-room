@@ -24,6 +24,15 @@ export class LoginComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       const team = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
       if (!!team) {
+        const timeout = 60 * 1 * 1000;
+        const now: number = new Date().getTime();
+        const timeFinished = new Date(team.finishedAt).getTime();
+        const timePasssed = now - timeFinished;
+        if (timePasssed >= timeout) {
+          this.cacheService.clear();
+          this.router.navigate([`login/${params.pageID}`]);
+          return;
+        }
         if (team.finished) this.router.navigate([`results/${team.finalTime}`]);
         else this.router.navigate([`page/${team.pageID}`]);
       }
