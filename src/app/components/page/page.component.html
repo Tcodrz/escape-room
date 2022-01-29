@@ -21,7 +21,7 @@
 </p-card>
 <ng-container *ngIf="!!page && page.questions?.length > 0">
     <ng-container *ngFor="let q of page.questions; let i = index">
-        <app-question *ngIf="i === page.currentQuestionIndex" [question]="q" [questionNumber]="i"
+        <app-question *ngIf="i === team.currentQuestion" [question]="q" [questionNumber]="i"
                       (clueRecieved)="onAddTime(60)"
                       (answerFail)="onAddTime(120)" (answerSuccess)="onAnswerSuccess()"></app-question>
     </ng-container>

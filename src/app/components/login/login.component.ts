@@ -22,11 +22,11 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
-      const page = this.cacheService.getItem<Page>(LocalStorageKeys.Page);
       const team = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
-      if (!!team) this.teamName.nativeElement.value = team.name;
-      if (!!team && team.finished) this.router.navigate([`results/${team.finalTime}`]);
-      if (!!page && page.id === params.pageID && !!team) this.router.navigate([`page/${params.pageID}`]);
+      if (!!team) {
+        if (team.finished) this.router.navigate([`results/${team.finalTime}`]);
+        else this.router.navigate([`page/${team.pageID}`]);
+      }
       this.team = {
         pageID: params.pageID,
         id: '',

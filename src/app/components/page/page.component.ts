@@ -30,7 +30,7 @@ export class PageComponent implements OnInit, OnDestroy {
     const page = this.cacheService.getItem<Page>(LocalStorageKeys.Page);
     if (!!page) this.page = page;
     const cachedTeam = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
-    if (cachedTeam) this.teamService.setTeam(cachedTeam, false);
+    if (!!cachedTeam) this.teamService.setTeam(cachedTeam, false);
     this.teamService.getTeam().subscribe(team => {
       this.team = team;
       if (!!team && team.finished) this.router.navigate([`results/${team.finalTime}`]);
@@ -49,7 +49,6 @@ export class PageComponent implements OnInit, OnDestroy {
         this.pageService.getPage(params.id).subscribe(page => {
           this.page = page;
           this.updateCache();
-          this.page.currentQuestionIndex = -1;
           this.isLoading = false;
         });
       } else {
@@ -60,11 +59,14 @@ export class PageComponent implements OnInit, OnDestroy {
   continueGame(): void {
     this.page = this.cacheService.getItem<Page>(LocalStorageKeys.Page);
     let timer = this.cacheService.getItem<string>(LocalStorageKeys.Timer)
-    if (timer) {
-      const minutes = +timer.split(':')[0];
-      const seconds = +timer.split(':')[1];
+    if (this.team.time || timer) {
+      const cacheMinutes = +timer.split(':')[0];
+      const cacheSeconds = +timer.split(':')[1];
+      const cacheTime = (cacheMinutes * 60) + cacheSeconds;
+      const minutes = +this.team.time.split(':')[0];
+      const seconds = +this.team.time.split(':')[1];
       const time = (minutes * 60) + seconds;
-      this.pageService.setAddedTime(time);
+      this.pageService.setAddedTime(time >= cacheTime ? time : cacheTime);
     }
     if (this.team.started) {
       this.timerStart();
@@ -77,13 +79,14 @@ export class PageComponent implements OnInit, OnDestroy {
     this.teamService.updateTeam(this.team, true);
     this.pageService.setAddedTime(0);
     this.timerStart();
-    this.page.currentQuestionIndex = 0;
     this.updateCache();
     this.gameStart = true;
   }
   timerStart(): void {
+    if (!!this.timerSub) this.timerSub.unsubscribe();
     this.timerSub = this.pageService.getTimer().subscribe((time) => {
       this.cacheService.setItem(LocalStorageKeys.Timer, time);
+      this.team = { ...this.team, time: time };
       this.timer = time;
     });
   }
@@ -95,10 +98,11 @@ export class PageComponent implements OnInit, OnDestroy {
     this.pageService.gotoResultsPage(this.timer);
   }
   onAnswerSuccess(): void {
-    this.page.currentQuestionIndex++;
-    this.team = { ...this.team, currentQuestion: this.page.currentQuestionIndex };
+    this.team.currentQuestion++;
+    this.team = { ...this.team, currentQuestion: this.team.currentQuestion };
+    this.teamService.updateTeam(this.team, true);
     this.updateCache();
-    if (this.page.questions.length === this.page.currentQuestionIndex) {
+    if (this.page.questions.length === this.team.currentQuestion) {
       this.onGameOver();
     }
   }
