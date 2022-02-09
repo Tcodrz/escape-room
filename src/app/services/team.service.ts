@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { } from '@angular/fire/firestore';
-import { Router } from '@angular/router';
+import firebase from 'firebase/app';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Team } from '../interface/team.interface';
 import { CacheService, LocalStorageKeys } from './cache.service';
-import firebase from 'firebase/app'
+import { GotoService } from './goto.service';
 import TimeStamp = firebase.firestore.Timestamp;
 
 @Injectable({
@@ -21,13 +20,14 @@ export class TeamService {
   });
   constructor(
     private db: AngularFirestore,
-    private router: Router,
+    private goto: GotoService,
     private cacheService: CacheService,
   ) { }
   createTeam(team: Team): void {
     this.db.collection(`teams`).add(team).then(res => {
       team.id = res.id;
       this.setTeam(team, true);
+      this.cacheService.setItem(LocalStorageKeys.Team, team);
       this.goToPage();
     });
   }
@@ -44,7 +44,7 @@ export class TeamService {
   getTeam(): Observable<Team> { return this.team$.asObservable(); }
   goToPage(): void {
     const team = this.team$.getValue();
-    this.router.navigate([`page/${team.pageID}`]);
+    this.goto.Page(team.pageID);
   }
   updateTeam(changes: Partial<Team>, withCache: boolean): void {
     const team = { ...this.team$.getValue(), ...changes };

@@ -1,11 +1,12 @@
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { Page } from 'src/app/interface/page.interface';
-import { PageService } from './../../services/page.service';
-import { CacheService, LocalStorageKeys } from 'src/app/services/cache.service';
 import { Team } from 'src/app/interface/team.interface';
+import { CacheService, LocalStorageKeys } from 'src/app/services/cache.service';
+import { GotoService } from 'src/app/services/goto.service';
 import { TeamService } from 'src/app/services/team.service';
+import { PageService } from './../../services/page.service';
 
 @Component({
   selector: 'app-page',
@@ -24,16 +25,17 @@ export class PageComponent implements OnInit, OnDestroy {
     private pageService: PageService,
     private teamService: TeamService,
     private cacheService: CacheService,
-    private router: Router,
+    private goTo: GotoService,
   ) { }
   ngOnInit(): void {
-    const page = this.cacheService.getItem<Page>(LocalStorageKeys.Page);
-    if (!!page) this.page = page;
-    const cachedTeam = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
-    if (!!cachedTeam) this.teamService.setTeam(cachedTeam, false);
+    const pageInCache = this.cacheService.getItem<Page>(LocalStorageKeys.Page);
+    const teamInCache = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
+    if (teamInCache) this.teamService.setTeam(teamInCache, false);
+    else this.goTo.BadRequest();
+    if (!!pageInCache) this.page = pageInCache;
     this.teamService.getTeam().subscribe(team => {
       this.team = team;
-      if (!!team && team.finished) this.router.navigate([`results/${team.finalTime}`]);
+      if (!!team && team.finished) this.goTo.Results(team.finalTime);
       else {
         if (this.page && team.started) this.continueGame();
         else this.startNewGame();
@@ -57,7 +59,6 @@ export class PageComponent implements OnInit, OnDestroy {
     });
   }
   continueGame(): void {
-    this.page = this.cacheService.getItem<Page>(LocalStorageKeys.Page);
     let timer = this.cacheService.getItem<string>(LocalStorageKeys.Timer)
     let cacheTime;
     let time;
@@ -71,8 +72,10 @@ export class PageComponent implements OnInit, OnDestroy {
       const seconds = +this.team.time.split(':')[1];
       time = (minutes * 60) + seconds;
     }
+    const bufferInSeconds = 2;
     if (!!time || !!cacheTime) {
-      this.pageService.setAddedTime(time >= cacheTime ? time : cacheTime);
+      this.pageService.setAddedTime(bufferInSeconds + (time >= cacheTime ? time : cacheTime));
+      this.updateCache();
     }
     if (this.team.started) {
       this.timerStart();
@@ -101,18 +104,16 @@ export class PageComponent implements OnInit, OnDestroy {
     this.timerSub.unsubscribe();
     this.gameStart = false;
     this.teamService.updateTeam({ finalTime: this.timer, finished: true, finishedAt: new Date() }, true);
-    this.pageService.gotoResultsPage(this.timer);
+    this.goTo.Results(this.timer);
   }
   onAnswerSuccess(): void {
     this.team.currentQuestion++;
-    this.team = { ...this.team, currentQuestion: this.team.currentQuestion };
+    this.team = { ...this.team, currentQuestion: this.team.currentQuestion }; // ?? check if neccessary
     this.teamService.updateTeam(this.team, true);
     this.updateCache();
     if (this.page.questions.length === this.team.currentQuestion) {
       this.onGameOver();
     }
   }
-  updateCache(): void {
-    this.cacheService.setItem(LocalStorageKeys.Page, this.page);
-  }
+  updateCache(): void { this.cacheService.setItem(LocalStorageKeys.Page, this.page); }
 }
