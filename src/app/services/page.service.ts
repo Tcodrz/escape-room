@@ -1,16 +1,15 @@
-import { map } from 'rxjs/operators';
-import { Router } from '@angular/router';
-import { Observable, forkJoin, interval } from 'rxjs';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
-import { Question } from '../interface/question.interface';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { forkJoin, interval, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Page } from '../interface/page.interface';
+import { Question } from '../interface/question.interface';
+import { GotoService } from './goto.service';
 
 
 interface PageDocument {
   number: number;
   questions: string[];
-
 }
 
 @Injectable({
@@ -21,7 +20,7 @@ export class PageService {
 
   constructor(
     private db: AngularFirestore,
-    private router: Router,
+    private goto: GotoService,
   ) { }
   getPage(id: string): Observable<Page> {
     return forkJoin([
@@ -48,16 +47,8 @@ export class PageService {
       return timeString;
     }));
   }
-  setAddedTime(time: number): void {
-    this.addedTime = time;
-  }
-  addTime(seconds: number): void {
-    this.addedTime += seconds;
-  }
-  gotoErrorPage(): void {
-    this.router.navigate(['bad-request']);
-  }
-  gotoResultsPage(time: string): void {
-    this.router.navigate([`results/${time}`]);
-  }
+  setAddedTime(time: number): void { this.addedTime = time; }
+  addTime(seconds: number): void { this.addedTime += seconds; }
+  gotoErrorPage(): void { this.goto.BadRequest(); }
+  gotoResultsPage(time: string): void { this.goto.Results(time); }
 }
