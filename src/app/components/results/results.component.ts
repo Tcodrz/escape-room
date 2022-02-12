@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Page } from 'src/app/interface/page.interface';
 import { CacheService, LocalStorageKeys } from 'src/app/services/cache.service';
 import { TeamService } from 'src/app/services/team.service';
 
@@ -10,6 +11,7 @@ import { TeamService } from 'src/app/services/team.service';
 })
 export class ResultsComponent implements OnInit {
   time: string;
+  code: string;
   constructor(
     private activatedRoute: ActivatedRoute,
     private teamService: TeamService,
@@ -18,7 +20,8 @@ export class ResultsComponent implements OnInit {
   ngOnInit(): void {
     this.activatedRoute.params.subscribe(params => {
       this.time = params.time;
-      localStorage.removeItem(LocalStorageKeys.Page);
+      const page = this.cacheService.getItem<Page>(LocalStorageKeys.Page);
+      this.code = page.code;
       localStorage.removeItem(LocalStorageKeys.Timer);
     });
   }
