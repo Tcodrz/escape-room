@@ -10,9 +10,9 @@
         <p class="clue-container" *ngFor="let clue of clues"> <i class="pi pi-question"></i> - &nbsp;&nbsp;{{ clue }}
         </p>
         <div class="button-container">
-            <button pButton class="p-button-text p-button-rounded p-button-success" icon="pi pi-check"
-                    (click)="onSubmit(answer.value)"></button>
-            <button pButton class="p-button-text p-button-rounded p-button-help"
+            <button pButton class="p-button-success" icon="pi pi-check" label=" שליחת תשובה" iconPos="right"
+                    (click)="onSubmit(answer.value)"> </button>
+            <button pButton class=" p-button-help" label="רמז" iconPos="right"
                     icon="pi pi-question-circle" (click)="onClueRequest()"></button>
         </div>
     </div>
