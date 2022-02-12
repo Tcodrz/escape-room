@@ -14,6 +14,7 @@ export class LoginComponent implements OnInit {
   @ViewChild('teamName', { static: true }) teamName: ElementRef;
   team: Team;
   isSubmiting: boolean;
+  message: string;
   constructor(
     private activatedRoute: ActivatedRoute,
     private teamService: TeamService,
@@ -43,10 +44,18 @@ export class LoginComponent implements OnInit {
     });
   }
   onSubmit(teamName: string): void {
-    if (!this.validate(teamName)) return;
     this.isSubmiting = true;
-    this.team.name = teamName;
-    this.teamService.createTeam(this.team);
+    this.message = undefined;
+    this.teamService.isAvailable(teamName).subscribe(isAvailable => {
+      if (isAvailable && this.validate(teamName)) {
+        this.team.name = teamName;
+        this.teamService.createTeam(this.team);
+      } else {
+        this.message = 'שם קבוצה תפוס או לא חוקי, נסו שם אחר'
+        this.isSubmiting = false;
+      }
+    });
+
   }
   validate(teamName: string): boolean {
     if (!teamName || teamName === '') return false;

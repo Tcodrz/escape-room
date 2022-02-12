@@ -10,5 +10,6 @@
                 <i class="pi pi-spin pi-spinner" *ngIf="isSubmiting"></i>
             </button>
         </div>
+        <p-message *ngIf="message" severity="warn" [text]="message"></p-message>
     </div>
 </p-card>

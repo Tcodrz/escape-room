@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import firebase from 'firebase/app';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Team } from '../interface/team.interface';
 import { CacheService, LocalStorageKeys } from './cache.service';
 import { GotoService } from './goto.service';
@@ -49,6 +50,17 @@ export class TeamService {
   updateTeam(changes: Partial<Team>, withCache: boolean): void {
     const team = { ...this.team$.getValue(), ...changes };
     this.setTeam(team, withCache);
+  }
+  isAvailable(teamName: string): Observable<boolean> {
+    return this.db.collection<Team>('teams').get().pipe(
+      map(teams => {
+        const teamNames: string[] = [];
+        teams.forEach(team => {
+          const tName = team.data().name;
+          teamNames.push(tName);
+        });
+        return !teamNames.includes(teamName);
+      }));
   }
   private updateCache(): void {
     const team = this.team$.getValue();
