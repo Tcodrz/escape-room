@@ -24,7 +24,7 @@
     <ng-container *ngFor="let q of page.questions; let i = index">
         <app-question *ngIf="i === team.currentQuestion" [question]="q" [questionNumber]="i"
                       [totalQuestions]="page.questions.length"
-                      (clueRecieved)="onAddTime(60)"
+                      (clueRecieved)="onAddTime($event)"
                       (answerFail)="onAddTime(120)" (answerSuccess)="onAnswerSuccess()"></app-question>
     </ng-container>
 </ng-container>

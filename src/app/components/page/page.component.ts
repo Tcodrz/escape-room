@@ -99,7 +99,10 @@ export class PageComponent implements OnInit, OnDestroy {
       this.timer = time;
     });
   }
-  onAddTime(seconds: number): void { this.pageService.addTime(seconds); }
+  onAddTime(minutes: number): void {
+    const seconds = minutes * 60;
+    this.pageService.addTime(seconds);
+  }
   onGameOver(): void {
     this.timerSub.unsubscribe();
     this.gameStart = false;

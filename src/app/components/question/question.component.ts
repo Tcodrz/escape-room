@@ -10,22 +10,21 @@ export class QuestionComponent implements OnInit {
   @Input() question: Question;
   @Input() questionNumber: number;
   @Input() totalQuestions: number;
-  @Output() clueRecieved: EventEmitter<void> = new EventEmitter<void>();
+  @Output() clueRecieved: EventEmitter<number> = new EventEmitter<number>();
   @Output() answerSuccess: EventEmitter<void> = new EventEmitter<void>();
   @Output() answerFail: EventEmitter<void> = new EventEmitter<void>();
   @ViewChild('answer', { static: false }) answerInput: ElementRef;
   message: string;
   messageColor: messageTypes;
-  clueIndex = 0;
-  clues: string[] = [];
+  showHint: boolean;
   constructor() { }
   ngOnInit(): void { }
   onClueRequest(): void {
-    if (this.question.hints[this.clueIndex]) {
-      this.clues.push(this.question.hints[this.clueIndex]);
-      this.clueRecieved.emit();
-      this.clueIndex++;
-      this.showMessage('נוספה דקה לשעון', 'warn');
+    if (this.question.hint && !this.showHint) {
+      this.showHint = true;
+      const penalty = this.question.hint.penalty;
+      this.clueRecieved.emit(this.question.hint.penalty);
+      this.showMessage(`נוספו ${penalty} דקות לשעון`, 'warn');
     } else {
       // show message 'NO MORE CLUES...'
     }

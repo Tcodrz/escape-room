@@ -6,12 +6,6 @@ import { Page } from '../interface/page.interface';
 import { Question } from '../interface/question.interface';
 import { GotoService } from './goto.service';
 
-
-interface PageDocument {
-  number: number;
-  questions: string[];
-}
-
 @Injectable({
   providedIn: 'root'
 })
@@ -24,11 +18,11 @@ export class PageService {
   ) { }
   getPage(id: string): Observable<Page> {
     return forkJoin([
-      this.db.doc<PageDocument>(`page/${id}`).get(),
-      this.db.collection<Question>(`questions`).get()
+      this.db.doc<Page>(`page/${id}`).get(),
+      this.db.collection<Question>(`questions`, ref => ref.orderBy('number')).get()
     ]).pipe(
       map(([pageDoc, questionsCollection]) => {
-        const page: Page = { id: pageDoc.id, questions: [], number: pageDoc.data().number };
+        const page: Page = { id: pageDoc.id, questions: [], name: pageDoc.data().name, code: pageDoc.data().code };
         questionsCollection.forEach(questionDoc => {
           const question: Question = { id: questionDoc.id, ...questionDoc.data() };
           if (question.pageID === page.id) page.questions.push(question);
