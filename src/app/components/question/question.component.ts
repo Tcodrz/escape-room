@@ -1,3 +1,4 @@
+import { Page } from './../../interface/page.interface';
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { Question } from 'src/app/interface/question.interface';
 type messageTypes = 'warn' | 'success' | 'info';
@@ -8,6 +9,7 @@ type messageTypes = 'warn' | 'success' | 'info';
 })
 export class QuestionComponent implements OnInit {
   @Input() question: Question;
+  @Input() page: Page;
   @Input() questionNumber: number;
   @Input() totalQuestions: number;
   @Output() clueRecieved: EventEmitter<number> = new EventEmitter<number>();
@@ -17,9 +19,14 @@ export class QuestionComponent implements OnInit {
   message: string;
   messageColor: messageTypes;
   showHint: boolean;
+  showImageClue: boolean;
+  showHintExtra: boolean
   constructor() { }
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.showHintExtra = this.page.name === 'boxSmall' && this.question.number === 2;
+  }
   onClueRequest(): void {
+    this.showImageClue = this.page.name === 'boxSmall' && this.question.number === 2;
     if (this.question.hint && !this.showHint) {
       this.showHint = true;
       const penalty = this.question.hint.penalty;

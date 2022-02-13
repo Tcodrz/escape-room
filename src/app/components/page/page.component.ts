@@ -32,14 +32,14 @@ export class PageComponent implements OnInit, OnDestroy {
     const teamInCache = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
     if (teamInCache) this.teamService.setTeam(teamInCache, false);
     else this.goTo.BadRequest();
-    if (!!pageInCache) this.page = pageInCache;
-    this.teamService.getTeam().subscribe(team => {
+    if (pageInCache) this.page = pageInCache;
+    this.teamService.getTeam().subscribe((team: Team) => {
       this.team = team;
-      if (!!team && team.finished) this.goTo.Results(team.finalTime);
-      else {
-        if (this.page && team.started) this.continueGame();
-        else this.startNewGame();
-      }
+      const teamFinished = !!team && team.finished;
+      const teamStarted = this.page && team.started;
+      if (teamFinished) this.goTo.Results(team.finalTime);
+      else if (teamStarted) this.continueGame();
+      else this.startNewGame();
     })
   }
   ngOnDestroy(): void {

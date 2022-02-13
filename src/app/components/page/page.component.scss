@@ -1,13 +1,24 @@
-.timer {
-  font-size: 40px;
-  text-align: center;
-  letter-spacing: 7px;
+@import '../../../assets/constants.scss';
+
+::ng-deep {
+  p-card.p-element.timer-container>div.p-card.p-component>div.p-card-body>div.p-card-content {
+    padding: 0;
+
+    div.timer {
+      font-size: 74px;
+      text-align: center;
+      letter-spacing: 7px;
+      font-weight: bold;
+      color: $color-darkRed;
+    }
+  }
 }
 
 .game-intro {
   h2 {
     text-align: center;
   }
+
   button.p-button-primary {
     display: block;
     margin-top: 10px;

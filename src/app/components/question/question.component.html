@@ -1,21 +1,22 @@
 <p-card>
-    <div class="question">
-        <div class="question-header">
-            <h1>{{ questionNumber + 1}}/{{ totalQuestions }}</h1>
-            <p-message [ngClass]="message ? 'visible' : 'hidden'" [severity]="messageColor" [text]="message">
-            </p-message>
-        </div>
-        <h3>{{ question.q }}</h3>
-        <input type="text" #answer pInputText class="answer" autofocus>
-        <p class="clue-container" *ngIf="showHint">
-            <i class="pi pi-question"></i>
-            {{ question.hint.hint }}
-        </p>
-        <div class="button-container">
-            <button pButton class="p-button-success" icon="pi pi-check" label=" שליחת תשובה" iconPos="right"
-                    (click)="onSubmit(answer.value)"> </button>
-            <button *ngIf="question.hint" pButton class=" p-button-help" label="רמז" iconPos="right"
-                    icon="pi pi-question-circle" (click)="onClueRequest()"></button>
-        </div>
+  <div class="question">
+    <div class="question-header">
+      <h1>{{ questionNumber + 1}}/{{ totalQuestions }}</h1>
+      <p-message [ngClass]="message ? 'visible' : 'hidden'" [severity]="messageColor" [text]="message">
+      </p-message>
     </div>
+    <h3>{{ question.q }}</h3>
+    <input type="text" #answer pInputText class="answer" autofocus>
+    <p class="clue-container" *ngIf="showHint">
+      <i class="pi pi-question"></i>
+      {{ question.hint.hint }}
+    </p>
+    <img src="assets/q2draw.jpg" alt="" *ngIf="showImageClue">
+    <div class="button-container">
+      <button pButton class="p-button-success" icon="pi pi-check" label=" שליחת תשובה" iconPos="right"
+        (click)="onSubmit(answer.value)"> </button>
+      <button *ngIf="question.hint" pButton class=" p-button-help" [label]="showHintExtra ? question.hint.extra : 'רמז'"
+        iconPos="right" icon="pi pi-question-circle" (click)="onClueRequest()"></button>
+    </div>
+  </div>
 </p-card>

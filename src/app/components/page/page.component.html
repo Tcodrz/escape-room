@@ -1,30 +1,29 @@
 <div *ngIf="isLoading">Loading...</div>
 
-<p-card *ngIf="gameStart">
-    <div class="timer"> {{ timer }} </div>
+<p-card *ngIf="gameStart" class="timer-container">
+  <div class="timer"> {{ timer }} </div>
 </p-card>
 
 <p-card *ngIf="!gameStart && !isLoading">
-    <div class="game-intro">
-        <h2>ברוכים הבאים</h2>
-        <h4>להלן חוקי המשחק:</h4>
-        <ul>
-            <li>עליכם לענות על כל השאלות בזמן הקצר ביותר</li>
-            <li>מרגע שתתחילו לשחק השעון יתחיל לרוץ ויספור את הזמן שלכם</li>
-            <li>תוכלו לבקש רמזים ע"י לחיצה על <i class="pi pi-question-circle"></i></li>
-            <li>כל בקשה לרמז תעלה את השעון בדקה</li>
-            <li>אם תכניסו תשובה לא נכונה יתווספו שתי דקות לשעון שלכם</li>
-            <li>לחצו על התחלה כדי להתחיל לשחק</li>
-            <li>בהצלחה!</li>
-        </ul>
-        <button pButton class="p-button-raised p-button-primary" (click)="onStart()">התחלה</button>
-    </div>
+  <div class="game-intro">
+    <h2>ברוכים הבאים</h2>
+    <h4>להלן חוקי המשחק:</h4>
+    <ul>
+      <li>עליכם לענות על כל השאלות בזמן הקצר ביותר</li>
+      <li>מרגע שתתחילו לשחק השעון יתחיל לרוץ ויספור את הזמן שלכם</li>
+      <li>תוכלו לבקש רמזים ע"י לחיצה על <i class="pi pi-question-circle"></i></li>
+      <li>כל בקשה לרמז תוסיף זמן לשעון שלכם</li>
+      <li>אם תכניסו תשובה לא נכונה יתווספו שתי דקות לשעון שלכם</li>
+      <li>לחצו על התחלה כדי להתחיל לשחק</li>
+      <li>בהצלחה!</li>
+    </ul>
+    <button pButton class="p-button-raised p-button-primary" (click)="onStart()">התחלה</button>
+  </div>
 </p-card>
 <ng-container *ngIf="!!page && page.questions?.length > 0">
-    <ng-container *ngFor="let q of page.questions; let i = index">
-        <app-question *ngIf="i === team.currentQuestion" [question]="q" [questionNumber]="i"
-                      [totalQuestions]="page.questions.length"
-                      (clueRecieved)="onAddTime($event)"
-                      (answerFail)="onAddTime(120)" (answerSuccess)="onAnswerSuccess()"></app-question>
-    </ng-container>
+  <ng-container *ngFor="let q of page.questions; let i = index">
+    <app-question *ngIf="i === team.currentQuestion" [question]="q" [questionNumber]="i" [page]="page"
+      [totalQuestions]="page.questions.length" (clueRecieved)="onAddTime($event)" (answerFail)="onAddTime(2)"
+      (answerSuccess)="onAnswerSuccess()"></app-question>
+  </ng-container>
 </ng-container>
