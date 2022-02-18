@@ -1,6 +1,6 @@
 <div *ngIf="isLoading">Loading...</div>
 
-<div class="page-info" *ngIf="isLocalHost">
+<div class="page-info" *ngIf="isLocalHost && page">
   <p-card>
     <h1>{{ page.name }}</h1>
     <p> {{ page.id }} </p>
