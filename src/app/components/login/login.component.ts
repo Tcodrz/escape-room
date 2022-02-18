@@ -27,21 +27,25 @@ export class LoginComponent implements OnInit {
     this.activatedRoute.params.subscribe(params => {
       this.team = this.initTeam(params.pageID);
       const teamInCache = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
-      if (!!teamInCache) {
-        const cooldownTime = 1; // how much time the user should stay locked out from the game in minutes
-        const cooldownMs = cooldownTime * 60 * 1000; // total cooldown time in milliseconds
-        const now = new Date().getTime();
-        const timeFinished = new Date(teamInCache.finishedAt).getTime();
-        const timePasssedFromLastGame = now - timeFinished;
-        const enableNewGame = timePasssedFromLastGame >= cooldownMs;
-        if (teamInCache.finished) {
-          if (enableNewGame) {
-            this.cacheService.clear();
-            this.goTo.Login(teamInCache.pageID);
-          } else { this.goTo.Results(teamInCache.finalTime); }
-        } else { this.goTo.Page(teamInCache.pageID); }
-      }
+      if (!!teamInCache) this.loginValidation(teamInCache, params.pageID);
     });
+  }
+  loginValidation(team: Team, pageID: string) {
+    const cooldownTime = 1; // how much time the user should stay locked out from the game in minutes
+    const cooldownMs = cooldownTime * 60 * 1000; // total cooldown time in milliseconds
+    const now = new Date().getTime();
+    const timeFinished = new Date(team.finishedAt).getTime();
+    const timePasssedFromLastGame = now - timeFinished;
+    const enableNewGame = timePasssedFromLastGame >= cooldownMs;
+    const differentPage = pageID !== team.pageID;
+    if (team.finished) {
+      if (enableNewGame || differentPage) { // timeout finished or different page - can start new game
+        this.cacheService.clear();
+        this.goTo.Login(pageID);
+      } else { this.goTo.Results(team.finalTime); }
+    } else { // if team did not finish -> continue game with current page
+      this.goTo.Page(team.pageID);
+    }
   }
   onSubmit(teamName: string): void {
     this.isSubmiting = true;
@@ -62,7 +66,7 @@ export class LoginComponent implements OnInit {
     else return true;
   }
   private initTeam(pageID: string): Team {
-    const team = {
+    const team: Team = {
       pageID: pageID,
       id: '',
       name: '',
