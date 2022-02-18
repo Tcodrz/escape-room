@@ -11,12 +11,12 @@
       <i class="pi pi-question"></i>
       {{ question.hint.hint }}
     </p>
-    <img src="assets/q2draw.jpg" alt="" *ngIf="showImageClue">
+    <img src="assets/q2draw.jpg" alt="" *ngIf="showImageClue" style="width: 100%;">
     <div class="button-container">
       <button pButton class="p-button-success" icon="pi pi-check" label=" שליחת תשובה" iconPos="right"
         (click)="onSubmit(answer.value)"> </button>
-      <button *ngIf="question.hint" pButton class=" p-button-help" [label]="showHintExtra ? question.hint.extra : 'רמז'"
-        iconPos="right" icon="pi pi-question-circle" (click)="onClueRequest()"></button>
+      <button *ngIf="question.hint" pButton class=" p-button-help" [label]="hint" iconPos="right"
+        icon="pi pi-question-circle" (click)="onClueRequest()"></button>
     </div>
   </div>
 </p-card>

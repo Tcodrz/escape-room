@@ -20,10 +20,14 @@ export class QuestionComponent implements OnInit {
   messageColor: messageTypes;
   showHint: boolean;
   showImageClue: boolean;
-  showHintExtra: boolean
+  showHintExtra: boolean;
+  hint: string;
   constructor() { }
   ngOnInit(): void {
     this.showHintExtra = this.page.name === 'boxSmall' && this.question.number === 2;
+    const hintWithExtra = this.question.hint.extra + ' ' + this.question.hint.penalty + '+דקות';
+    const hintWithPenalty = 'רמז +' + this.question.hint.penalty + ' דקות';
+    this.hint = this.showHintExtra ? hintWithExtra : hintWithPenalty;
   }
   onClueRequest(): void {
     this.showImageClue = this.page.name === 'boxSmall' && this.question.number === 2;
