@@ -1,15 +1,15 @@
-<p-card>
-    <div class="login-page">
-        <h1>ברוכים הבאים</h1>
-        <h3>מה שם הקבוצה שלכם?</h3>
-        <input type="text" #teamName pInputText class="team-name" autofocus>
-        <div>
-            <button pButton class="p-button-raised p-button-primary" type="submit" [disabled]="isSubmiting"
-                    (click)="onSubmit(teamName.value)">
-                <span *ngIf="!isSubmiting">כניסה</span>
-                <i class="pi pi-spin pi-spinner" *ngIf="isSubmiting"></i>
-            </button>
-        </div>
-        <p-message *ngIf="message" severity="warn" [text]="message"></p-message>
+<p-card *ngIf="!loading">
+  <div class="login-page">
+    <h1>ברוכים הבאים</h1>
+    <h3>מה שם הקבוצה שלכם?</h3>
+    <input type="text" #teamName pInputText class="team-name" autofocus>
+    <div>
+      <button pButton class="p-button-raised p-button-primary" type="submit" [disabled]="isSubmiting"
+        (click)="onSubmit(teamName.value)">
+        <span *ngIf="!isSubmiting">כניסה</span>
+        <i class="pi pi-spin pi-spinner" *ngIf="isSubmiting"></i>
+      </button>
     </div>
+    <p-message *ngIf="message" severity="warn" [text]="message"></p-message>
+  </div>
 </p-card>

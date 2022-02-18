@@ -25,9 +25,11 @@ export class QuestionComponent implements OnInit {
   constructor() { }
   ngOnInit(): void {
     this.showHintExtra = this.page.name === 'boxSmall' && this.question.number === 2;
-    const hintWithExtra = this.question.hint.extra + ' ' + this.question.hint.penalty + '+דקות';
-    const hintWithPenalty = 'רמז +' + this.question.hint.penalty + ' דקות';
-    this.hint = this.showHintExtra ? hintWithExtra : hintWithPenalty;
+    if (this.question.hint) {
+      const hintWithExtra = this.question.hint?.extra + ' ' + this.question.hint.penalty + '+דקות';
+      const hintWithPenalty = 'רמז +' + this.question.hint.penalty + ' דקות';
+      this.hint = this.showHintExtra ? hintWithExtra : hintWithPenalty;
+    }
   }
   onClueRequest(): void {
     this.showImageClue = this.page.name === 'boxSmall' && this.question.number === 2;

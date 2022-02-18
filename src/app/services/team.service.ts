@@ -24,6 +24,11 @@ export class TeamService {
     private goto: GotoService,
     private cacheService: CacheService,
   ) { }
+  getTeamByID(id: string): Observable<Team> {
+    return this.db.doc<Team>(`teams/${id}`).get().pipe(map(
+      teamDoc => ({ id: teamDoc.id, ...teamDoc.data() })
+    ));
+  }
   createTeam(team: Team): void {
     this.db.collection(`teams`).add(team).then(res => {
       team.id = res.id;

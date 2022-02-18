@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
   team: Team;
   isSubmiting: boolean;
   message: string;
+  loading: boolean;
   constructor(
     private activatedRoute: ActivatedRoute,
     private teamService: TeamService,
@@ -24,10 +25,20 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.isSubmiting = false;
+    this.loading = true;
     this.activatedRoute.params.subscribe(params => {
       this.team = this.initTeam(params.pageID);
       const teamInCache = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
-      if (!!teamInCache) this.loginValidation(teamInCache, params.pageID);
+      this.resetCache(teamInCache, params.pageID);
+    });
+  }
+  resetCache(team: Team, pageID: string) {
+    if (!team) return;
+    this.teamService.getTeamByID(team.id).subscribe(t => {
+      const teamExists = !!t.name;
+      if (!teamExists) this.cacheService.clear();
+      if (teamExists) this.loginValidation(t, pageID);
+      this.loading = false;
     });
   }
   loginValidation(team: Team, pageID: string) {
