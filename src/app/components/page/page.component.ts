@@ -6,6 +6,7 @@ import { Team } from 'src/app/interface/team.interface';
 import { CacheService, LocalStorageKeys } from 'src/app/services/cache.service';
 import { GotoService } from 'src/app/services/goto.service';
 import { TeamService } from 'src/app/services/team.service';
+import { environment } from 'src/environments/environment';
 import { PageService } from './../../services/page.service';
 
 @Component({
@@ -20,6 +21,7 @@ export class PageComponent implements OnInit, OnDestroy {
   isLoading = true;
   gameStart = false;
   timerSub: Subscription;
+  isLocalHost: boolean;
   constructor(
     private activatedRoutes: ActivatedRoute,
     private pageService: PageService,
@@ -28,6 +30,7 @@ export class PageComponent implements OnInit, OnDestroy {
     private goTo: GotoService,
   ) { }
   ngOnInit(): void {
+    this.isLocalHost = !environment.production;
     const pageInCache = this.cacheService.getItem<Page>(LocalStorageKeys.Page);
     const teamInCache = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
     if (teamInCache) this.teamService.setTeam(teamInCache, false);

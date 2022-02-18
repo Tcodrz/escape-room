@@ -1,5 +1,13 @@
 <div *ngIf="isLoading">Loading...</div>
 
+<div class="page-info" *ngIf="isLocalHost">
+  <p-card>
+    <h1>{{ page.name }}</h1>
+    <p> {{ page.id }} </p>
+    <p> {{ page.code }} </p>
+  </p-card>
+</div>
+
 <p-card *ngIf="gameStart" class="timer-container">
   <div class="timer"> {{ timer }} </div>
 </p-card>
