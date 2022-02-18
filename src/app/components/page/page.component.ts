@@ -53,28 +53,46 @@ export class PageComponent implements OnInit, OnDestroy {
           this.updateCache();
           this.isLoading = false;
         });
-      } else {
-        this.pageService.gotoErrorPage();
-      }
+      } else { this.pageService.gotoErrorPage(); }
     });
   }
-  continueGame(): void {
-    let timer = this.cacheService.getItem<string>(LocalStorageKeys.Timer)
-    let cacheTime;
-    let time;
-    if (!!timer) {
-      const cacheMinutes = +timer.split(':')[0];
-      const cacheSeconds = +timer.split(':')[1];
-      cacheTime = (cacheMinutes * 60) + cacheSeconds;
-    }
-    if (!!this.team.time) {
-      const minutes = +this.team.time.split(':')[0];
-      const seconds = +this.team.time.split(':')[1];
+  onStart(): void { // start new game on user click
+    this.team = { ...this.team, started: true, currentQuestion: 0, totalQuestions: this.page.questions.length };
+    this.teamService.updateTeam(this.team, true);
+    this.pageService.setAddedTime(0);
+    this.timerStart();
+    this.updateCache();
+    this.gameStart = true;
+  }
+  onAddTime(minutes: number): void {
+    const seconds = minutes * 60;
+    this.pageService.addTime(seconds);
+  }
+  onAnswerSuccess(): void {
+    this.team.currentQuestion++;
+    this.team = { ...this.team, currentQuestion: this.team.currentQuestion }; // ?? check if neccessary
+    this.teamService.updateTeam(this.team, true);
+    this.updateCache();
+    if (this.page.questions.length === this.team.currentQuestion) { this.onGameOver(); }
+  }
+  private continueGame(): void {
+    const timerInCache = this.cacheService.getItem<{ time: string; timestamp: number }>(LocalStorageKeys.Timer)
+    const timer = timerInCache || this.team.timer;
+    let time: number;
+    let timeDiffSec = 0; // time past from user disconnected in seconds
+    if (timer) {
+      const now = new Date().getTime();
+      const timestamp = timer.timestamp;
+      timeDiffSec = Math.floor((now - timestamp) / 1000);
+      const parts = timer.time.split(':');
+      const minutes = +parts[0];
+      const seconds = +parts[1];
       time = (minutes * 60) + seconds;
     }
-    const bufferInSeconds = 2;
-    if (!!time || !!cacheTime) {
-      this.pageService.setAddedTime(bufferInSeconds + (time >= cacheTime ? time : cacheTime));
+    const reloadTimeSec = 2 // 2 seconds penalty for reload
+    const bufferInSeconds = reloadTimeSec + timeDiffSec;
+    if (!!time) {
+      this.pageService.setAddedTime(bufferInSeconds + time);
       this.updateCache();
     }
     if (this.team.started) {
@@ -83,40 +101,20 @@ export class PageComponent implements OnInit, OnDestroy {
     }
     this.isLoading = false;
   }
-  onStart(): void {
-    this.team = { ...this.team, started: true, currentQuestion: 0, totalQuestions: this.page.questions.length };
-    this.teamService.updateTeam(this.team, true);
-    this.pageService.setAddedTime(0);
-    this.timerStart();
-    this.updateCache();
-    this.gameStart = true;
-  }
-  timerStart(): void {
+  private timerStart(): void {
     if (!!this.timerSub) this.timerSub.unsubscribe();
     this.timerSub = this.pageService.getTimer().subscribe((time) => {
-      this.cacheService.setItem(LocalStorageKeys.Timer, time);
-      this.team = { ...this.team, time: time };
+      const timer = { time: time, timestamp: new Date().getTime() };
+      this.cacheService.setItem(LocalStorageKeys.Timer, timer);
+      this.team = { ...this.team, timer: timer };
       this.timer = time;
     });
   }
-  onAddTime(minutes: number): void {
-    const seconds = minutes * 60;
-    this.pageService.addTime(seconds);
-  }
-  onGameOver(): void {
+  private onGameOver(): void {
     this.timerSub.unsubscribe();
     this.gameStart = false;
     this.teamService.updateTeam({ finalTime: this.timer, finished: true, finishedAt: new Date() }, true);
     this.goTo.Results(this.timer);
   }
-  onAnswerSuccess(): void {
-    this.team.currentQuestion++;
-    this.team = { ...this.team, currentQuestion: this.team.currentQuestion }; // ?? check if neccessary
-    this.teamService.updateTeam(this.team, true);
-    this.updateCache();
-    if (this.page.questions.length === this.team.currentQuestion) {
-      this.onGameOver();
-    }
-  }
-  updateCache(): void { this.cacheService.setItem(LocalStorageKeys.Page, this.page); }
+  private updateCache(): void { this.cacheService.setItem(LocalStorageKeys.Page, this.page); }
 }

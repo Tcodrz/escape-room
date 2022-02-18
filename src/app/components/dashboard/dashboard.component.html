@@ -1,16 +1,16 @@
 <div class="dashboard-page">
-    <p-card>
-        <div class="dashboard-actions">
-            <h1>מסך מנהל</h1>
-            <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
-            <button type="button" class="p-button-sm" pButton icon="pi pi-list" (click)="menu.toggle($event)"></button>
-        </div>
-        <div class="team-card" *ngFor="let team of teams$ | async">
-            <p-card>
-                <h3>קבוצה {{ team.name }} ענתה על {{ team.currentQuestion ? team.currentQuestion : 0 }} מתוך {{
-                    team.totalQuestions }} </h3>
-                <h4 *ngIf="team.time"> בזמן {{ team.time }} </h4>
-            </p-card>
-        </div>
-    </p-card>
+  <p-card>
+    <div class="dashboard-actions">
+      <h1>מסך מנהל</h1>
+      <p-menu #menu [popup]="true" [model]="menuItems"></p-menu>
+      <button type="button" class="p-button-sm" pButton icon="pi pi-list" (click)="menu.toggle($event)"></button>
+    </div>
+    <div class="team-card" *ngFor="let team of teams$ | async">
+      <p-card>
+        <h3>קבוצה {{ team.name }} ענתה על {{ team.currentQuestion ? team.currentQuestion : 0 }} מתוך {{
+          team.totalQuestions }} </h3>
+        <h4 *ngIf="team.timer"> בזמן {{ team.timer.time }} </h4>
+      </p-card>
+    </div>
+  </p-card>
 </div>
