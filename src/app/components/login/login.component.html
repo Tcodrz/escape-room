@@ -1,7 +1,7 @@
-<div *ngIf="loading" class="spinner-container">
+<div *ngIf="isLoading" class="spinner-container">
   <p-progressSpinner></p-progressSpinner>
 </div>
-<p-card *ngIf="!loading">
+<p-card *ngIf="!isLoading">
   <div class="login-page">
     <h1>ברוכים הבאים</h1>
     <h3>מה שם הקבוצה שלכם?</h3>
