@@ -1,30 +1,33 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardModule } from 'primeng/card';
+import { NgModule } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
 import { MenuModule } from 'primeng/menu';
-import { MessagesModule } from 'primeng/messages';
 import { MessageModule } from 'primeng/message';
+import { MessagesModule } from 'primeng/messages';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
-    CardModule,
     ButtonModule,
+    CardModule,
+    CommonModule,
     InputTextModule,
     MenuModule,
-    MessagesModule,
     MessageModule,
+    MessagesModule,
+    ProgressSpinnerModule,
   ],
   exports: [
-    CardModule,
     ButtonModule,
+    CardModule,
     InputTextModule,
     MenuModule,
-    MessagesModule,
     MessageModule,
+    MessagesModule,
+    ProgressSpinnerModule
   ]
 })
 export class PrimengModule { }

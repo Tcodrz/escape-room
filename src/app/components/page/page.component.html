@@ -1,4 +1,6 @@
-<div *ngIf="isLoading">Loading...</div>
+<div *ngIf="isLoading" class="spinner-container">
+  <p-progressSpinner></p-progressSpinner>
+</div>
 
 <div class="page-info" *ngIf="isLocalHost && page">
   <p-card>

@@ -44,18 +44,21 @@ body {
   }
 }
 
+// BUTTONS
 button.p-button-success>span,
 button.p-button-help>span,
 button.p-button-primary>span {
   color: $color-white !important;
 }
 
-.p-card {
-  margin-top: 1.2rem;
+.p-button {
+  margin: 0 10px 0 0;
+  background-color: $color-secondary;
 }
 
-.p-button {
-  background-color: $color-secondary;
+.p-button .p-button-icon-right {
+  margin-left: 0;
+  margin-right: 0.5rem;
 }
 
 .p-button:enabled:hover {
@@ -77,8 +80,12 @@ button.p-button-primary>span {
 }
 
 .p-button.p-button-help {
-
   background-color: #75568a;
+}
+
+// CARDS
+.p-card {
+  margin-top: 1.2rem;
 }
 
 .p-card.p-component {
@@ -90,11 +97,13 @@ button.p-button-primary>span {
   padding: 0.5rem;
 }
 
-.p-button {
-  margin: 0 10px 0 0;
+.p-card .p-card-content {
+  padding: 0;
 }
 
-.p-button .p-button-icon-right {
-  margin-left: 0;
-  margin-right: 0.5rem;
+// SPINNER
+.spinner-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
