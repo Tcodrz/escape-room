@@ -26,7 +26,16 @@ export class TeamService {
   ) { }
   getTeamByID(id: string): Observable<Team> {
     return this.db.doc<Team>(`teams/${id}`).get().pipe(map(
-      teamDoc => ({ id: teamDoc.id, ...teamDoc.data() })
+      teamDoc => {
+        const team = { id: teamDoc.id, ...teamDoc.data() };
+        const isFinished = team.finished;
+        if (isFinished) {
+          const finishedAt = team.finishedAt as unknown as { seconds: number };
+          const time = new Date(finishedAt.seconds * 1000);
+          team.finishedAt = time;
+        }
+        return team;
+      }
     ));
   }
   createTeam(team: Team): void {

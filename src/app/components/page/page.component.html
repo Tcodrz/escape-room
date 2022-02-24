@@ -3,10 +3,11 @@
 </div>
 
 <div class="page-info" *ngIf="isLocalHost && page">
-  <p-card>
-    <h1>{{ page.name }}</h1>
-    <p> {{ page.id }} </p>
-    <p> {{ page.code }} </p>
+  <p-card class="admin">
+    <h3>{{ page.name }}</h3>
+    <p> <span class="bold">id:</span>{{ page.id }} </p>
+    <p> <span class="bold">code:</span>{{ page.code }} </p>
+    <p> <span class="bold">language:</span>{{ page.language }} </p>
   </p-card>
 </div>
 
@@ -16,18 +17,21 @@
 
 <p-card *ngIf="!gameStart && !isLoading">
   <div class="game-intro">
-    <h2>ברוכים הבאים</h2>
-    <h4>להלן חוקי המשחק:</h4>
+    <h2>{{welcome}}</h2>
+    <h4>{{subHeader}}</h4>
     <ul>
-      <li>עליכם לענות על כל השאלות בזמן הקצר ביותר</li>
+      <li *ngFor="let rule of rules"> {{ rule }} </li>
+    </ul>
+    <!-- <h2>ברוכים הבאים</h2> -->
+    <!-- <h4>להלן חוקי המשחק:</h4> -->
+    <!-- <li>עליכם לענות על כל השאלות בזמן הקצר ביותר</li>
       <li>מרגע שתתחילו לשחק השעון יתחיל לרוץ ויספור את הזמן שלכם</li>
       <li>תוכלו לבקש רמזים ע"י לחיצה על <i class="pi pi-question-circle"></i></li>
       <li>כל בקשה לרמז תוסיף זמן לשעון שלכם</li>
       <li>אם תכניסו תשובה לא נכונה יתווספו שתי דקות לשעון שלכם</li>
       <li>לחצו על התחלה כדי להתחיל לשחק</li>
-      <li>בהצלחה!</li>
-    </ul>
-    <button pButton class="p-button-raised p-button-primary" (click)="onStart()">התחלה</button>
+      <li>בהצלחה!</li> -->
+    <button pButton class="p-button-raised p-button-primary" (click)="onStart()">{{ start }}</button>
   </div>
 </p-card>
 <ng-container *ngIf="!!page && page.questions?.length > 0">

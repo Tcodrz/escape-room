@@ -5,4 +5,5 @@ export interface Page {
   questions: Question[];
   name: string;
   code: string;
+  language: string;
 }

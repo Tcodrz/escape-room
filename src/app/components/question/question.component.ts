@@ -1,7 +1,13 @@
+import { PageService, TextOptions } from './../../services/page.service';
 import { Page } from './../../interface/page.interface';
 import { Component, Input, OnInit, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { Question } from 'src/app/interface/question.interface';
 type messageTypes = 'warn' | 'success' | 'info';
+export enum PageNames {
+  Small = 'boxSmall',
+  Medium = 'boxMedium',
+  Big = 'boxBig',
+};
 @Component({
   selector: 'app-question',
   templateUrl: './question.component.html',
@@ -22,14 +28,26 @@ export class QuestionComponent implements OnInit {
   showImageClue: boolean;
   showHintExtra: boolean;
   hint: string;
-  constructor() { }
+  btnText: string;
+  hintWithExtra: string;
+  hintWithPenalty: string;
+  constructor(
+    private pageService: PageService,
+  ) { }
   ngOnInit(): void {
+    const isHebrew = this.pageService.isHebrew(this.page.id);
+    this.initText();
     this.showHintExtra = this.page.name === 'boxSmall' && this.question.number === 2;
     if (this.question.hint) {
-      const hintWithExtra = this.question.hint?.extra + ' ' + this.question.hint.penalty + '+דקות';
-      const hintWithPenalty = 'רמז +' + this.question.hint.penalty + ' דקות';
-      this.hint = this.showHintExtra ? hintWithExtra : hintWithPenalty;
+      // const hintWithExtra = this.question.hint?.extra + ' ' + this.question.hint.penalty + '+דקות';
+      const hintWithPenalty = this.question.hint.penalty;
+      this.hint = this.showHintExtra ? this.hintWithExtra : this.hintWithPenalty + '+' + hintWithPenalty;
     }
+  }
+  initText() {
+    this.btnText = this.pageService.getText(TextOptions.ButtonSubmit, this.page.id);
+    this.hintWithExtra = this.pageService.getText(TextOptions.HintWithExtra, this.page.id);
+    this.hintWithPenalty = this.pageService.getText(TextOptions.Hint, this.page.id);
   }
   onClueRequest(): void {
     this.showImageClue = this.page.name === 'boxSmall' && this.question.number === 2;

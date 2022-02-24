@@ -101,9 +101,27 @@ button.p-button-primary>span {
   padding: 0;
 }
 
+.p-element.admin>.p-card.p-component>.p-card-body {
+  padding: 5px;
+  text-align: left;
+
+  h3 {
+    text-align: center;
+  }
+
+  .p-card-content {
+    line-height: .5;
+  }
+}
+
 // SPINNER
 .spinner-container {
   display: flex;
   flex-direction: row;
   justify-content: center;
+}
+
+// TEXT / FONT
+.bold {
+  font-weight: bold;
 }

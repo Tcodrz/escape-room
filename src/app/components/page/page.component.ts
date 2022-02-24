@@ -7,7 +7,7 @@ import { CacheService, LocalStorageKeys } from 'src/app/services/cache.service';
 import { GotoService } from 'src/app/services/goto.service';
 import { TeamService } from 'src/app/services/team.service';
 import { environment } from 'src/environments/environment';
-import { PageService } from './../../services/page.service';
+import { PageService, TextOptions } from './../../services/page.service';
 
 @Component({
   selector: 'app-page',
@@ -22,6 +22,11 @@ export class PageComponent implements OnInit, OnDestroy {
   gameStart = false;
   timerSub: Subscription;
   isLocalHost: boolean;
+  isHebrew: boolean;
+  welcome: string;
+  subHeader: string;
+  rules: string[];
+  start: string;
   constructor(
     private activatedRoutes: ActivatedRoute,
     private pageService: PageService,
@@ -43,16 +48,25 @@ export class PageComponent implements OnInit, OnDestroy {
       if (teamFinished) this.goTo.Results(team.finalTime);
       else if (teamStarted) this.continueGame();
       else this.startNewGame();
-    })
+    });
   }
   ngOnDestroy(): void {
     if (!!this.timerSub && !this.timerSub.closed) this.timerSub.unsubscribe();
+  }
+  initText() {
+    this.welcome = this.pageService.getText(TextOptions.Welcome, this.page.id);
+    this.subHeader = this.pageService.getText(TextOptions.SubHeader, this.page.id);
+    const rules = this.pageService.getText(TextOptions.Rules, this.page.id);
+    this.rules = rules.split('/').filter(s => s !== '');
+    this.start = this.pageService.getText(TextOptions.Start, this.page.id);
   }
   startNewGame(): void {
     this.activatedRoutes.params.subscribe(params => {
       if (params.id) {
         this.pageService.getPage(params.id).subscribe(page => {
           this.page = page;
+          this.isHebrew = this.pageService.isHebrew(this.page.id);
+          this.initText();
           this.updateCache();
           this.isLoading = false;
         });
@@ -79,6 +93,7 @@ export class PageComponent implements OnInit, OnDestroy {
     if (this.page.questions.length === this.team.currentQuestion) { this.onGameOver(); }
   }
   private continueGame(): void {
+    this.initText();
     const timerInCache = this.cacheService.getItem<{ time: string; timestamp: number }>(LocalStorageKeys.Timer)
     const timer = timerInCache || this.team.timer;
     let time: number;

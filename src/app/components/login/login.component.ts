@@ -1,5 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { TextOptions } from 'src/app/services/page.service';
+import { PageService } from './../../services/page.service';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Team } from 'src/app/interface/team.interface';
 import { CacheService, LocalStorageKeys } from 'src/app/services/cache.service';
 import { TeamService } from 'src/app/services/team.service';
@@ -11,27 +13,44 @@ import { GotoService } from '../../services/goto.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
-  @ViewChild('teamName', { static: true }) teamName: ElementRef;
   team: Team;
   isSubmiting: boolean;
   message: string;
   isLoading: boolean;
+  welcome: string;
+  enter: string;
+  enterTeamName: string;
   constructor(
     private activatedRoute: ActivatedRoute,
     private teamService: TeamService,
     private cacheService: CacheService,
+    private pageService: PageService,
     private goTo: GotoService,
   ) { }
 
   ngOnInit(): void {
+    // general login logic:
+    // 1. no team in cache -> enable login
+    // 2. team in cache ->
+    //    a. if team doesnt exists in DB -> clear cache and enable login
+    //    b. if team exists in DB continue
+    // 3. team still in game -> continue game
+    // 4. team finished game and logged in to same page -> go to results page if in cooldown, if not in cooldown clear cache and enable login
+    // 5. team finished game and logged in to different page -> clear cache and enable login
     this.isSubmiting = false;
     this.isLoading = true;
     this.activatedRoute.params.subscribe(params => {
-      this.team = this.initTeam(params.pageID);
+      this.initText(params.pageID);
+      this.team = this.initTeam(params.pageID); // if no pageID in params user will be redirected to error-page from app-routing.module.ts
       const teamInCache = this.cacheService.getItem<Team>(LocalStorageKeys.Team);
       if (teamInCache) this.cacheReset(teamInCache, params.pageID);
       else this.isLoading = false;
     });
+  }
+  initText(pageID: any) {
+    this.enter = this.pageService.getText(TextOptions.Enter, pageID);
+    this.welcome = this.pageService.getText(TextOptions.Welcome, pageID);
+    this.enterTeamName = this.pageService.getText(TextOptions.InsertTeamName, pageID);
   }
   cacheReset(team: Team, pageID: string) {
     this.teamService.getTeamByID(team.id).subscribe(t => {
@@ -59,12 +78,17 @@ export class LoginComponent implements OnInit {
     }
   }
   onSubmit(teamName: string): void {
+    if (!teamName) {
+      this.message = 'שם קבוצה לא יכול להיות ריק';
+      return;
+    }
     this.isSubmiting = true;
     this.message = undefined;
     this.teamService.isAvailable(teamName).subscribe(isAvailable => {
       if (isAvailable && this.validate(teamName)) {
         this.team.name = teamName;
         this.teamService.createTeam(this.team);
+        // this.goTo.Page(this.team.pageID); // instead of calling it from the service
       } else {
         this.message = 'שם קבוצה תפוס או לא חוקי, נסו שם אחר'
         this.isSubmiting = false;
@@ -73,8 +97,7 @@ export class LoginComponent implements OnInit {
 
   }
   validate(teamName: string): boolean {
-    if (!teamName || teamName === '') return false;
-    else return true;
+    return !!teamName && teamName !== '';
   }
   private initTeam(pageID: string): Team {
     const team: Team = {
